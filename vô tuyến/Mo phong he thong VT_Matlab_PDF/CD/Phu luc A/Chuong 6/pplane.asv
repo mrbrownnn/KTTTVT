@@ -1,0 +1,27 @@
+function [] = pplane(x,y,nsettle)
+% Plots the phase plane with phase in the range (-pi,pi)
+ln      = length(x);
+maxfreq = max(y);
+minfreq = min(y);
+close                                   % Old figure discarded
+axis([-1 1 1.1*minfreq 1.1*maxfreq]);   % Establish scale
+hold on                                 % Collect info for new fig
+j       = nsettle;
+while j < ln
+    i   = 1;
+    while x(j) < pi & j < ln
+        a(i)= x(j)/pi;
+        b(i)= y(j);
+        j   = j+1;
+        i   = i+1;
+    end
+    plot(a,b,'k')
+    a   = [];
+    b   = [];
+    x   = x - 2*pi;
+end
+hold off
+title('MÆt ph¼ng pha Phase-Plane Plot','fontname','.vntime','color','b','fontsize',14);
+xlabel('Lçi pha/Pi','fontname','.vntime','color','b','fontsize',14);
+ylabel('Lçi tÇn sè Hz','fontname','.vntime','color','b','fontsize',14);
+grid

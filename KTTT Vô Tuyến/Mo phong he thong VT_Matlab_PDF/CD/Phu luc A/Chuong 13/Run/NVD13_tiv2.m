@@ -1,0 +1,69 @@
+% File: NVD13_tiv2.m
+clc;
+clear all;
+close all;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Set default parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+symrate         = 512;
+nsamples        = 16;
+nsymbols        = 128;
+bdoppler        = 16;
+ndelay          = 8; 
+n               = nsymbols*nsamples;
+ts              = 1.0/(symrate*nsamples);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generate two uncorrelated seq of Complex Gaussian Samples
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+z1      = randn(1,n)+i*randn(1,n);
+z2      = randn(1,n)+i*randn(1,n);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Filter the two uncorrelated samples to generate correlated sequences
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+coefft  = exp(-bdoppler*2*pi*ts);     
+zz1     = zeros(1,n);
+zz2     = zeros(1,n);
+for k = 2:n   
+   zz1(k) = z1(k)+coefft*zz1(k-1);
+   zz2(k) = z2(k)+coefft*zz2(k-1);
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generate a BPSK (random binry wavefrom and compute the output)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+M       = 2;								% binary case
+x1      = NVD13_mpsk_pulses(M,nsymbols,nsamples);
+y1      = x1.*zz1;                          % first output component 
+y2      = x1.*zz2;                          % second output component
+
+y(1:ndelay)     = y1(1:ndelay);
+y(ndelay+1:n)   = y1(ndelay+1:n)+y2(1:n-ndelay);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% Plot the results 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[psdzz1,freq]   = NVD13_log_psd(zz1,n,ts);
+figure; 
+plot(freq,psdzz1); grid;
+xlabel('TÇn sè Hz','fontname','.Vntime','color','b','fontsize',12);
+ylabel('Biªn ®é [dB]','fontname','.Vntime','color','b','fontsize',12);
+title('MËt ®é phæ c«ng suÊt PSD cña ®¸p øng xung kim thµnh phÇn thø nhÊt','fontname','.Vntime','color','b','fontsize',12);
+
+
+nn = 0:499;
+figure; 
+subplot(2,1,1)
+plot(nn,imag(x1(1:500)),'k',nn,real(y1(1:500)),'k'); grid;
+title('§Çu vµo vµ thµnh phÇn thø nhÊt cña ®Çu ra','fontname','.Vntime','color','b','fontsize',12);
+xlabel('ChØ sè mÉu','fontname','.Vntime','color','b','fontsize',12);
+ylabel('Møc tÝn hiÖu','fontname','.Vntime','color','b','fontsize',12);
+
+subplot(2,1,2)
+plot(nn,imag(x1(1:500)),'k',nn,real(y(1:500)),'k');grid;
+title('§Çu vµo vµ ®Çu ra tæng','fontname','.Vntime','color','b','fontsize',12)
+xlabel('ChØ sè mÉu','fontname','.Vntime','color','b','fontsize',12);
+ylabel('Møc tÝn hiÖu','fontname','.Vntime','color','b','fontsize',12);

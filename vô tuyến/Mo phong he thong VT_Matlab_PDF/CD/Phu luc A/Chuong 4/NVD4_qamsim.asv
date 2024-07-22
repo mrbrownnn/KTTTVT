@@ -1,0 +1,52 @@
+% file NVD4_qamsim
+clc;
+clear all;
+close all;
+
+levelx      = input('So muc tren thanh phan I > ');
+levely      = input('So muc tren thanh phan Q > ');
+m           = input('So ky hieu > ');
+n           = input('So mau tren Number of samples per symbol > ');
+bw          = input('Filter bandwidth, 0<bw<1 > ');
+
+%%%%%%%%%%%%%%%%%%%%
+[xd,xq]     = qam(levelx,levely,m,n);
+%%%%%%%%%%%%%%%%%%%%
+[b,a]       = butter(6,bw);			% determine filter coefficients
+yd          = filter(b,a,xd);		% filter Inphase coefficient
+yq          = filter(b,a,xq);		% filter Quadrature coefficient
+
+%%%%%%%%%%%%%%%%%%%%%
+subplot(2,2,1)						% first pane
+plot(xd,xq,'o')						% unfiltered scatterplot
+a           = 1.4;
+maxd        = max(xd);
+maxq        = max(xq);
+mind        = min(xd);
+minq        = min(xq);
+axis([a*mind a*maxd a*minq a*maxq])
+axis equal
+xlabel('x_I','fontname','.Vntime','fontsize',14); 
+ylabel('x_Q','fontname','.Vntime','fontsize',14);
+title('unfiltered scatterplot','fontname','.Vntime','fontsize',12)
+%%%%%%%%%%%%%%%%%%%%%
+subplot(2,2,2)						% second pane
+plot(yd,yq)							% filtered scatterplot
+axis equal;
+xlabel('x_I','fontname','.Vntime','fontsize',14);
+ylabel('x_Q','fontname','.Vntime','fontsize',14);
+title('filtered scatterplot','fontname','.Vntime','fontsize',12)
+%%%%%%%%%%%%%%%%%%%%%
+sym     = 30;						% number of symbols in time plot
+nsym    = (0:sym*n)/n;				% x axis vector for time plots
+subplot(2,2,3)						% third pane 
+plot(nsym(1:sym*n),yd(1:sym*n))	    % filtered direct component 
+xlabel('ChØ sè ký hiÖu','fontname','.Vntime','fontsize',12);
+ylabel('x_I','fontname','.Vntime','fontsize',14);
+title('filtered Inphase component','fontname','.Vntime','fontsize',12);
+%%%%%%%%%%%%%%%%%%%%%
+subplot(2,2,4)						% fourth pane
+plot(nsym(1:sym*n),yq(1:sym*n))	    % filtered quadrature component
+xlabel('ChØ sè ký hiÖu','fontname','.Vntime','fontsize',12);
+ylabel('x_Q','fontname','.Vntime','fontsize',14);
+title('filtered quadrature component','fontname','.Vntime','fontsize',12);

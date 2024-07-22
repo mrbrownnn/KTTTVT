@@ -1,0 +1,8 @@
+% file: Chapter6sim
+
+clc;
+clear all;
+close all;
+NVD6_pllpre;
+NVD6_PLLsim1
+NVD6_PLLPost

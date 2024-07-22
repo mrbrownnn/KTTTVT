@@ -1,0 +1,28 @@
+% File: NVD8_hist.m
+clc;
+clear all;
+close all;
+
+subplot(2,2,1)
+x = randn(1,100); hist(x,20)
+ylabel('N_i'); xlabel('(a)')
+title('Tr­êng hîp: N=100; B =20',...
+    'fontname','.vntime','color','b','fontsize',12)
+
+subplot(2,2,2)
+x = randn(1,100); hist(x,5)
+ylabel('N_i'); xlabel('(b)')
+title('Tr­êng hîp: N=100; B =5',...
+    'fontname','.vntime','color','b','fontsize',12)
+
+subplot(2,2,3)
+x = randn(1,1000); hist(x,50)
+ylabel('N_i'); xlabel('(c)')
+title('Tr­êng hîp: N=100; B =20',...
+    'fontname','.vntime','color','b','fontsize',12)
+
+subplot(2,2,4)
+x = randn(1,100000); hist(x,50)
+ylabel('N_i'); xlabel('(d)')
+title('Tr­êng hîp: N=100; B =20',...
+    'fontname','.vntime','color','b','fontsize',12)

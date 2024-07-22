@@ -1,0 +1,9 @@
+% function FIR_IIR_desig
+br = remez(42,[0 0.37 0.43 1],[1 1 0 0]);
+bls = firls(42,[0 0.37 0.43 1],[1 1 0 0]);
+
+bm = gremez(42,[0 0.37 0.43 1],...
+[1 1 0 0],[1 10],'minphase');
+
+bm = gremez(42,[0 0.37 0.43 1],...
+[1 1 0 0],[1 10],minphase');
